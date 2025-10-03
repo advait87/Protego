@@ -14,10 +14,10 @@
 
 # Team
 
-Advait 
-Devashish
-Eshaan
-Harshal
-Manognya
-Ujas
+- Advait 
+- Devashish
+- Eshaan
+- Harshal
+- Manognya
+- Ujas
 
