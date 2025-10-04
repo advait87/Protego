@@ -17,13 +17,12 @@ class Logging:
         # Use a single log file
         self.log_file = os.path.join(self.log_dir, 'protego.log')
 
-        # Configure logging
+        # Configure logging - file only, no console output
         logging.basicConfig(
             level=logging.INFO,
             format='%(asctime)s - %(levelname)s - %(message)s',
             handlers=[
                 logging.FileHandler(self.log_file, mode='a'),  # 'a' for append mode
-                logging.StreamHandler()  # Also print to console
             ]
         )
         self.logger = logging.getLogger('Protego')
