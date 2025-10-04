@@ -10,7 +10,6 @@ easy_configs = {
 medium_configs = {
         "filesystem": {
             "cramfs_available": "[\"no\"]",
-            ",
             "freevxfs_available": "[\"no\"]",
         }
 }
@@ -18,7 +17,6 @@ medium_configs = {
 strong_configs = {
         "filesystem": {
             "cramfs_available": "[\"no\"]",
-            ",
             "freevxfs_available": "[\"no\"]",
         }
 }

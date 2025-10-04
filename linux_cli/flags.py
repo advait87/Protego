@@ -1,7 +1,7 @@
 flags = {
         "filesystem": {
             "cramfs_available": {
-                "value": "unknown",
+                "value": "yes",
                 "values": ["yes", "no", "unknown"],
                 "get_command": "",
                 "set_command": "",
