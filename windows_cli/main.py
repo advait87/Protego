@@ -43,21 +43,37 @@ def get_current_value(parameter):
 
 
 def main():
-    # Initialize logger
+    # Parse arguments first to check for --no-logs
+    parser = argparse.ArgumentParser(
+        prog="Protego",
+        description="Protego: Windows System Hardening Tool (Annexure A Compliance)",
+        epilog="Thanks for using Protego."
+    )
+    
+    # Add --no-logs as a global option
+    parser.add_argument("--no-logs", action="store_true", help="Run without logging", default=False)
+
+    # Initialize logger if logging is not disabled
     logger = None
     try:
-        logger = Logging()
+        args, remaining_argv = parser.parse_known_args()
+        if not args.no_logs:
+            logger = Logging()
         
         if sys.platform != "win32":
             # Check platform, though the Linux version handles Linux specifically.
-            logger.log_error("Error: This is the Windows Engine. Run the correct Protego version.")
+            if logger:
+                logger.log_error("Error: This is the Windows Engine. Run the correct Protego version.")
+            print("Error: This is the Windows Engine. Run the correct Protego version.")
             return
             
+        # Reset parser for command parsing
         parser = argparse.ArgumentParser(
             prog="Protego",
             description="Protego: Windows System Hardening Tool (Annexure A Compliance)",
             epilog="Thanks for using Protego."
         )
+        parser.add_argument("--no-logs", action="store_true", help="Run without logging", default=False)
 
         subparsers = parser.add_subparsers(dest='command', help='Available commands', required=True)
 
@@ -78,14 +94,16 @@ def main():
 
         args = parser.parse_args()
         
-        logger.log_action("Protego Windows Engine Initialization", True, f"Command: {args.command}")
+        if logger:
+            logger.log_action("Protego Windows Engine Initialization", True, f"Command: {args.command}")
         
         # Initialization for commands that need the Engine
         if args.command in ["harden", "check", "rollback"]:
             level = getattr(args, 'level', 'strict')
             target_config = CONFIG_LEVELS[level]
-            logger.log_action("Initializing Windows Engine", True, f"Level: {level}")
-            engine = WindowsEngine(target_config, level) 
+            if logger:
+                logger.log_action("Initializing Windows Engine", True, f"Level: {level}")
+            engine = WindowsEngine(target_config, level, logger=logger)
         
         # Execution Dispatch
         match args.command:
@@ -93,7 +111,8 @@ def main():
                 # Display both current value and target value
                 current_val = get_current_value(args.parameter)
                 flag_data = get_parameter_flag_data(args.parameter)
-                logger.log_action("Get Parameter Value", True, f"Parameter: {args.parameter}")
+                if logger:
+                    logger.log_action("Get Parameter Value", True, f"Parameter: {args.parameter}")
                 
                 print(f"\nPolicy: {args.parameter}")
                 print(f"  Current/Placeholder Value: {current_val}")
@@ -101,7 +120,8 @@ def main():
                     print(f"  Target Value: {flag_data.get('target_value', 'N/A')}")
                     print(f"  Check Type: {flag_data.get('check_type', 'N/A')}")
                 else:
-                    logger.log_error(f"Parameter '{args.parameter}' not found")
+                    if logger:
+                        logger.log_error(f"Parameter '{args.parameter}' not found")
                     print(f"Error: Parameter '{args.parameter}' not found.")
             
             case "check":
@@ -114,7 +134,8 @@ def main():
                 engine.rollback()
                 
             case _:
-                logger.log_error("Invalid command specified")
+                if logger:
+                    logger.log_error("Invalid command specified")
                 print("Invalid command.")
 
     except Exception as e:
