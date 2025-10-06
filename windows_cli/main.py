@@ -82,7 +82,8 @@ def main():
         subparser_get.add_argument("parameter", help="Policy name (e.g., MinimumPasswordLength)")
 
         # 2. CHECK Command
-        subparsers.add_parser("check", help="Checks system compliance against the target policies.")
+        check_parser = subparsers.add_parser("check", help="Checks system compliance against the target policies.")
+        check_parser.add_argument("--pdf", action="store_true", help="Export report as PDF", default=False)
 
         # 3. HARDEN Command
         subparser_harden = subparsers.add_parser("harden", help="Applies hardening policies to the system.")
