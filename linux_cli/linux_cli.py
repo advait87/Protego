@@ -1,4 +1,4 @@
-#!/bin/python3
+##!/bin/python3
 import argparse
 import protego_utils as pu
 
@@ -13,7 +13,7 @@ get_parser.set_defaults(func=pu.print_flag)
 
 set_parser = subparsers.add_parser("set")
 set_parser.add_argument("--flag", "-f", type=str, required=True)
-set_parser.add_argument("--value", "-v", type=str, required=True)
+set_parser.add_argument("--value", "-v", type=str, default="_")
 set_parser.set_defaults(func=pu.set_flag)
 
 

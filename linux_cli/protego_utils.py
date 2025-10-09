@@ -23,22 +23,35 @@ def print_flag(args):
 def get_flag(args):
     for category in flags:
         for flag in flags[category]:
+            print(flags[category], flag, args.flag)
+
             if flag == args.flag:
                 return [flags[category][flag], category]
-    print(f"No flag named {args.flag}")
+    return [0, 0]
 
 def set_flag(args):
     [flag, category] = get_flag(args)
-    initial_value = flag["value"]
+    print(args.value)
     if flag == 0:
+        print(f"No flag named {args.flag}")
         return
-    if flag["value"] == args.value:
-        print(f"The value of {args.flag} is already {args.value}")
+    initial_value = flag["value"]
+    value = args.value
+    if value == "_":
+        while True:
+            value = input(f"({"/".join(flag["values"])})")
+            if value != "":
+                return
+
+    if flag["value"] == value:
+        print(f"The value of {args.flag} is already {value}")
         return
+    if value not in flag["values"]:
+        print(f"Invalid value for the parameter {args.flag}")
     try:
-        sub.run(flag["set_commands"][args.value], shell=True)
-        flag["value"] = args.value
-        print(f"Successfully change {args.flag} from {initial_value} to {args.value}")
+        sub.run(flag["set_commands"][value], shell=True)
+        flag["value"] = value
+        print(f"Successfully change {args.flag} from {initial_value} to {value}")
     except Exception as e:
         print("An error occurred while setting the parameter:")
         print(e)
