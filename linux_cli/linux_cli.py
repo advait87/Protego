@@ -1,4 +1,3 @@
-##!/bin/python3
 import argparse
 import protego_utils as pu
 
@@ -25,7 +24,10 @@ lsconfig_parser.set_defaults(func=pu.lsconfig)
 
 
 
-
-
 arguments = parser.parse_args()
-arguments.func(arguments)
+if (len(vars(arguments)) != 0):
+    arguments.func(arguments)
+else:
+    print("Hi! I'm protego")
+
+
